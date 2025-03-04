@@ -1,0 +1,1293 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title> Öğrenci Bilgi Sistemi - Güncel</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #2C3E50;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 90%;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        h1 {
+            color: #2C3E50;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"] {
+            padding: 12px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 15px;
+            border: 1px solid #cccccc;
+            border-radius: 6px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 12px;
+            font-size: 16px;
+            background-color: #F39C12;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        button:hover {
+            background-color: #e67e22;
+        }
+
+        .result-table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #eeeeee;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-radius: 6px;
+            table-layout: auto;
+            word-wrap: break-word;
+            overflow: hidden;
+        }
+
+        .result-table th, .result-table td {
+            padding: 8px;
+            text-align: center;
+            font-size: 14px;
+            height: 45px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .result-table th {
+            background-color: #2C3E50;
+            color: white;
+            font-weight: 600;
+        }
+
+        .result-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .category {
+            background-color: #ecf0f1;
+            font-weight: bold;
+            white-space: normal;
+        }
+
+        .total-row td {
+            background-color: #2C3E50;
+            color: white;
+            font-weight: bold;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #95a5a6;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 22px;
+            }
+            button, input[type="text"] {
+                font-size: 14px;
+                padding: 10px;
+            }
+            .result-table th, .result-table td {
+                font-size: 12px;
+                padding: 6px;
+            }
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1> Öğrenci Bilgi Sistemi</h1>
+        <p>Lütfen TC Kimlik Numaranızı Giriniz:</p>
+        <input type="text" id="tcInput" placeholder="TC Kimlik Numarası">
+        <br>
+        <button onclick="fetchStudentData()">Sonuçları Gör</button>
+        <div id="studentData" class="result"></div>
+        <div class="footer">
+            <p>© 2024 OG Öğrenci Bilgi Sistemi. Tüm Hakları Saklıdır.</p>
+        </div>
+    </div>
+
+    <script>
+        const studentData = {
+    "19996": {
+        "name": "ZEHRA BETÜL TOKGÖZ",
+        "ranking": 1,
+        "lgs_score": 444.974,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 18,
+                "yanlış": 2,
+                "net": 17.33
+            },
+            "SOSYAL": {
+                "doğru": 10,
+                "yanlış": 0,
+                "net": 10.0
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 8,
+                "yanlış": 2,
+                "net": 7.33
+            },
+            "İNGİLİZCE": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "MATEMATİK": {
+                "doğru": 16,
+                "yanlış": 3,
+                "net": 15.0
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 17,
+                "yanlış": 2,
+                "net": 16.33
+            }
+        },
+        "totals": {
+            "doğru": 78.0,
+            "yanlış": 10.0,
+            "net": 74.66
+        }
+    },
+    "13004": {
+        "name": "ASYA GÜMÜŞTEKİN",
+        "ranking": 2,
+        "lgs_score": 442.011,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 18,
+                "yanlış": 2,
+                "net": 17.33
+            },
+            "SOSYAL": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "İNGİLİZCE": {
+                "doğru": 10,
+                "yanlış": 0,
+                "net": 10.0
+            },
+            "MATEMATİK": {
+                "doğru": 14,
+                "yanlış": 3,
+                "net": 13.0
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 18,
+                "yanlış": 1,
+                "net": 17.67
+            }
+        },
+        "totals": {
+            "doğru": 78.0,
+            "yanlış": 8.0,
+            "net": 75.34
+        }
+    },
+    "31316": {
+        "name": "DEFNE EZDİ",
+        "ranking": 3,
+        "lgs_score": 433.991,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 19,
+                "yanlış": 1,
+                "net": 18.67
+            },
+            "SOSYAL": {
+                "doğru": 8,
+                "yanlış": 2,
+                "net": 7.33
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 10,
+                "yanlış": 0,
+                "net": 10.0
+            },
+            "İNGİLİZCE": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "MATEMATİK": {
+                "doğru": 14,
+                "yanlış": 3,
+                "net": 13.0
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 16,
+                "yanlış": 4,
+                "net": 14.67
+            }
+        },
+        "totals": {
+            "doğru": 76.0,
+            "yanlış": 11.0,
+            "net": 72.34
+        }
+    },
+    "29622": {
+        "name": "ALİ RÜZGAR DURUM",
+        "ranking": 4,
+        "lgs_score": 432.875,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 16,
+                "yanlış": 4,
+                "net": 14.67
+            },
+            "SOSYAL": {
+                "doğru": 10,
+                "yanlış": 0,
+                "net": 10.0
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 9,
+                "yanlış": 0,
+                "net": 9.0
+            },
+            "İNGİLİZCE": {
+                "doğru": 10,
+                "yanlış": 0,
+                "net": 10.0
+            },
+            "MATEMATİK": {
+                "doğru": 16,
+                "yanlış": 1,
+                "net": 15.67
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 15,
+                "yanlış": 4,
+                "net": 13.67
+            }
+        },
+        "totals": {
+            "doğru": 76.0,
+            "yanlış": 9.0,
+            "net": 73.01
+        }
+    },
+    "36140": {
+        "name": "ELA BERİL ATİK",
+        "ranking": 5,
+        "lgs_score": 426.351,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 17,
+                "yanlış": 3,
+                "net": 16.0
+            },
+            "SOSYAL": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 8,
+                "yanlış": 2,
+                "net": 7.33
+            },
+            "İNGİLİZCE": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "MATEMATİK": {
+                "doğru": 15,
+                "yanlış": 3,
+                "net": 14.0
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 16,
+                "yanlış": 4,
+                "net": 14.67
+            }
+        },
+        "totals": {
+            "doğru": 74.0,
+            "yanlış": 14.0,
+            "net": 69.34
+        }
+    },
+    "84042": {
+        "name": "DURU GÖKMEN",
+        "ranking": 6,
+        "lgs_score": 422.801,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 19,
+                "yanlış": 1,
+                "net": 18.67
+            },
+            "SOSYAL": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 8,
+                "yanlış": 2,
+                "net": 7.33
+            },
+            "İNGİLİZCE": {
+                "doğru": 10,
+                "yanlış": 0,
+                "net": 10.0
+            },
+            "MATEMATİK": {
+                "doğru": 12,
+                "yanlış": 3,
+                "net": 11.0
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 15,
+                "yanlış": 2,
+                "net": 14.33
+            }
+        },
+        "totals": {
+            "doğru": 73.0,
+            "yanlış": 9.0,
+            "net": 70.0
+        }
+    },
+    "97268": {
+        "name": "İDİL DURU CEYLAN",
+        "ranking": 7,
+        "lgs_score": 419.604,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 18,
+                "yanlış": 2,
+                "net": 17.33
+            },
+            "SOSYAL": {
+                "doğru": 6,
+                "yanlış": 3,
+                "net": 5.0
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 10,
+                "yanlış": 0,
+                "net": 10.0
+            },
+            "İNGİLİZCE": {
+                "doğru": 10,
+                "yanlış": 0,
+                "net": 10.0
+            },
+            "MATEMATİK": {
+                "doğru": 13,
+                "yanlış": 5,
+                "net": 11.33
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 16,
+                "yanlış": 3,
+                "net": 15.0
+            }
+        },
+        "totals": {
+            "doğru": 73.0,
+            "yanlış": 13.0,
+            "net": 68.66
+        }
+    },
+    "92106": {
+        "name": "ÇAĞAN COŞKUN",
+        "ranking": 8,
+        "lgs_score": 417.478,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 17,
+                "yanlış": 3,
+                "net": 16.0
+            },
+            "SOSYAL": {
+                "doğru": 7,
+                "yanlış": 3,
+                "net": 6.0
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 10,
+                "yanlış": 0,
+                "net": 10.0
+            },
+            "İNGİLİZCE": {
+                "doğru": 8,
+                "yanlış": 2,
+                "net": 7.33
+            },
+            "MATEMATİK": {
+                "doğru": 16,
+                "yanlış": 4,
+                "net": 14.67
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 14,
+                "yanlış": 6,
+                "net": 12.0
+            }
+        },
+        "totals": {
+            "doğru": 72.0,
+            "yanlış": 18.0,
+            "net": 66.0
+        }
+    },
+    "79760": {
+        "name": "ARDA ÇELİK",
+        "ranking": 9,
+        "lgs_score": 412.851,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 19,
+                "yanlış": 1,
+                "net": 18.67
+            },
+            "SOSYAL": {
+                "doğru": 10,
+                "yanlış": 0,
+                "net": 10.0
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "İNGİLİZCE": {
+                "doğru": 7,
+                "yanlış": 2,
+                "net": 6.33
+            },
+            "MATEMATİK": {
+                "doğru": 14,
+                "yanlış": 1,
+                "net": 13.67
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 11,
+                "yanlış": 8,
+                "net": 8.33
+            }
+        },
+        "totals": {
+            "doğru": 70.0,
+            "yanlış": 13.0,
+            "net": 65.67
+        }
+    },
+    "63870": {
+        "name": "BİLGE BULUT",
+        "ranking": 10,
+        "lgs_score": 410.166,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 15,
+                "yanlış": 5,
+                "net": 13.33
+            },
+            "SOSYAL": {
+                "doğru": 10,
+                "yanlış": 0,
+                "net": 10.0
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 10,
+                "yanlış": 0,
+                "net": 10.0
+            },
+            "İNGİLİZCE": {
+                "doğru": 10,
+                "yanlış": 0,
+                "net": 10.0
+            },
+            "MATEMATİK": {
+                "doğru": 13,
+                "yanlış": 6,
+                "net": 11.0
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 16,
+                "yanlış": 4,
+                "net": 14.67
+            }
+        },
+        "totals": {
+            "doğru": 74.0,
+            "yanlış": 15.0,
+            "net": 69.0
+        }
+    },
+    "68248": {
+        "name": "SAKİ YILDIRIM",
+        "ranking": 11,
+        "lgs_score": 403.684,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 16,
+                "yanlış": 4,
+                "net": 14.67
+            },
+            "SOSYAL": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "İNGİLİZCE": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "MATEMATİK": {
+                "doğru": 15,
+                "yanlış": 3,
+                "net": 14.0
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 12,
+                "yanlış": 8,
+                "net": 9.33
+            }
+        },
+        "totals": {
+            "doğru": 70.0,
+            "yanlış": 18.0,
+            "net": 64.01
+        }
+    },
+    "97834": {
+        "name": "DENİZ KELEŞOĞLU",
+        "ranking": 12,
+        "lgs_score": 396.953,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 16,
+                "yanlış": 4,
+                "net": 14.67
+            },
+            "SOSYAL": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "İNGİLİZCE": {
+                "doğru": 8,
+                "yanlış": 2,
+                "net": 7.33
+            },
+            "MATEMATİK": {
+                "doğru": 10,
+                "yanlış": 6,
+                "net": 8.0
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 17,
+                "yanlış": 3,
+                "net": 16.0
+            }
+        },
+        "totals": {
+            "doğru": 69.0,
+            "yanlış": 17.0,
+            "net": 63.34
+        }
+    },
+    "40642": {
+        "name": "RÜYA ÖZKER",
+        "ranking": 13,
+        "lgs_score": 396.37,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 18,
+                "yanlış": 2,
+                "net": 17.33
+            },
+            "SOSYAL": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 8,
+                "yanlış": 2,
+                "net": 7.33
+            },
+            "İNGİLİZCE": {
+                "doğru": 8,
+                "yanlış": 2,
+                "net": 7.33
+            },
+            "MATEMATİK": {
+                "doğru": 11,
+                "yanlış": 6,
+                "net": 9.0
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 14,
+                "yanlış": 5,
+                "net": 12.33
+            }
+        },
+        "totals": {
+            "doğru": 68.0,
+            "yanlış": 18.0,
+            "net": 61.99
+        }
+    },
+    "94568": {
+        "name": "IRMAK POYRAZ",
+        "ranking": 14,
+        "lgs_score": 395.445,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 14,
+                "yanlış": 6,
+                "net": 12.0
+            },
+            "SOSYAL": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "İNGİLİZCE": {
+                "doğru": 7,
+                "yanlış": 3,
+                "net": 6.0
+            },
+            "MATEMATİK": {
+                "doğru": 15,
+                "yanlış": 3,
+                "net": 14.0
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 13,
+                "yanlış": 6,
+                "net": 11.0
+            }
+        },
+        "totals": {
+            "doğru": 67.0,
+            "yanlış": 20.0,
+            "net": 60.34
+        }
+    },
+    "71964": {
+        "name": "GİZEM KALE",
+        "ranking": 15,
+        "lgs_score": 394.629,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 18,
+                "yanlış": 1,
+                "net": 17.67
+            },
+            "SOSYAL": {
+                "doğru": 6,
+                "yanlış": 2,
+                "net": 5.33
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "İNGİLİZCE": {
+                "doğru": 4,
+                "yanlış": 0,
+                "net": 4.0
+            },
+            "MATEMATİK": {
+                "doğru": 14,
+                "yanlış": 4,
+                "net": 12.67
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 11,
+                "yanlış": 6,
+                "net": 9.0
+            }
+        },
+        "totals": {
+            "doğru": 62.0,
+            "yanlış": 14.0,
+            "net": 57.34
+        }
+    },
+    "44546": {
+        "name": "SELİM DÖŞEYEN",
+        "ranking": 16,
+        "lgs_score": 390.146,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 14,
+                "yanlış": 6,
+                "net": 12.0
+            },
+            "SOSYAL": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "İNGİLİZCE": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "MATEMATİK": {
+                "doğru": 12,
+                "yanlış": 8,
+                "net": 9.33
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 16,
+                "yanlış": 4,
+                "net": 14.67
+            }
+        },
+        "totals": {
+            "doğru": 69.0,
+            "yanlış": 21.0,
+            "net": 62.01
+        }
+    },
+    "58140": {
+        "name": "HARUN EFE KÖROĞLU",
+        "ranking": 17,
+        "lgs_score": 379.47,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 15,
+                "yanlış": 5,
+                "net": 13.33
+            },
+            "SOSYAL": {
+                "doğru": 10,
+                "yanlış": 0,
+                "net": 10.0
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 8,
+                "yanlış": 2,
+                "net": 7.33
+            },
+            "İNGİLİZCE": {
+                "doğru": 6,
+                "yanlış": 4,
+                "net": 4.67
+            },
+            "MATEMATİK": {
+                "doğru": 14,
+                "yanlış": 5,
+                "net": 12.33
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 11,
+                "yanlış": 9,
+                "net": 8.0
+            }
+        },
+        "totals": {
+            "doğru": 64.0,
+            "yanlış": 25.0,
+            "net": 55.66
+        }
+    },
+    "80544": {
+        "name": "MERT ALİ SANCAKTUTAN",
+        "ranking": 18,
+        "lgs_score": 374.562,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 14,
+                "yanlış": 6,
+                "net": 12.0
+            },
+            "SOSYAL": {
+                "doğru": 7,
+                "yanlış": 3,
+                "net": 6.0
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 7,
+                "yanlış": 3,
+                "net": 6.0
+            },
+            "İNGİLİZCE": {
+                "doğru": 10,
+                "yanlış": 0,
+                "net": 10.0
+            },
+            "MATEMATİK": {
+                "doğru": 13,
+                "yanlış": 7,
+                "net": 10.67
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 13,
+                "yanlış": 7,
+                "net": 10.67
+            }
+        },
+        "totals": {
+            "doğru": 64.0,
+            "yanlış": 26.0,
+            "net": 55.34
+        }
+    },
+    "25428": {
+        "name": "ZÜLEYHA KIRTAY",
+        "ranking": 19,
+        "lgs_score": 350.947,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 14,
+                "yanlış": 4,
+                "net": 12.67
+            },
+            "SOSYAL": {
+                "doğru": 10,
+                "yanlış": 0,
+                "net": 10.0
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "İNGİLİZCE": {
+                "doğru": 8,
+                "yanlış": 2,
+                "net": 7.33
+            },
+            "MATEMATİK": {
+                "doğru": 7,
+                "yanlış": 6,
+                "net": 5.0
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 11,
+                "yanlış": 6,
+                "net": 9.0
+            }
+        },
+        "totals": {
+            "doğru": 59.0,
+            "yanlış": 19.0,
+            "net": 52.67
+        }
+    },
+    "52246": {
+        "name": "YİĞİT YOLDAŞ YÜREKLİ",
+        "ranking": 20,
+        "lgs_score": 342.091,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 13,
+                "yanlış": 7,
+                "net": 10.67
+            },
+            "SOSYAL": {
+                "doğru": 8,
+                "yanlış": 2,
+                "net": 7.33
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 7,
+                "yanlış": 3,
+                "net": 6.0
+            },
+            "İNGİLİZCE": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "MATEMATİK": {
+                "doğru": 5,
+                "yanlış": 9,
+                "net": 2.0
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 16,
+                "yanlış": 4,
+                "net": 14.67
+            }
+        },
+        "totals": {
+            "doğru": 58.0,
+            "yanlış": 26.0,
+            "net": 49.34
+        }
+    },
+    "40414": {
+        "name": "TOPRAK YILDIZ",
+        "ranking": 21,
+        "lgs_score": 340.698,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 13,
+                "yanlış": 6,
+                "net": 11.0
+            },
+            "SOSYAL": {
+                "doğru": 7,
+                "yanlış": 2,
+                "net": 6.33
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 6,
+                "yanlış": 3,
+                "net": 5.0
+            },
+            "İNGİLİZCE": {
+                "doğru": 1,
+                "yanlış": 6,
+                "net": -1.0
+            },
+            "MATEMATİK": {
+                "doğru": 12,
+                "yanlış": 4,
+                "net": 10.67
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 10,
+                "yanlış": 8,
+                "net": 7.33
+            }
+        },
+        "totals": {
+            "doğru": 49.0,
+            "yanlış": 29.0,
+            "net": 39.33
+        }
+    },
+    "79094": {
+        "name": "BERİL CANIM",
+        "ranking": 22,
+        "lgs_score": 335.721,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 15,
+                "yanlış": 5,
+                "net": 13.33
+            },
+            "SOSYAL": {
+                "doğru": 7,
+                "yanlış": 3,
+                "net": 6.0
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 6,
+                "yanlış": 4,
+                "net": 4.67
+            },
+            "İNGİLİZCE": {
+                "doğru": 8,
+                "yanlış": 2,
+                "net": 7.33
+            },
+            "MATEMATİK": {
+                "doğru": 11,
+                "yanlış": 9,
+                "net": 8.0
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 8,
+                "yanlış": 12,
+                "net": 4.0
+            }
+        },
+        "totals": {
+            "doğru": 55.0,
+            "yanlış": 35.0,
+            "net": 43.33
+        }
+    },
+    "21212": {
+        "name": "NEHİR ŞEN",
+        "ranking": 23,
+        "lgs_score": 313.351,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 13,
+                "yanlış": 6,
+                "net": 11.0
+            },
+            "SOSYAL": {
+                "doğru": 5,
+                "yanlış": 2,
+                "net": 4.33
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 8,
+                "yanlış": 0,
+                "net": 8.0
+            },
+            "İNGİLİZCE": {
+                "doğru": 0,
+                "yanlış": 2,
+                "net": -0.67
+            },
+            "MATEMATİK": {
+                "doğru": 6,
+                "yanlış": 7,
+                "net": 3.67
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 10,
+                "yanlış": 4,
+                "net": 8.67
+            }
+        },
+        "totals": {
+            "doğru": 42.0,
+            "yanlış": 21.0,
+            "net": 35.0
+        }
+    },
+    "18520": {
+        "name": "ARDA YİĞİT TOKGÖZ",
+        "ranking": 24,
+        "lgs_score": 308.179,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 11,
+                "yanlış": 9,
+                "net": 8.0
+            },
+            "SOSYAL": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 5,
+                "yanlış": 5,
+                "net": 3.33
+            },
+            "İNGİLİZCE": {
+                "doğru": 5,
+                "yanlış": 5,
+                "net": 3.33
+            },
+            "MATEMATİK": {
+                "doğru": 10,
+                "yanlış": 8,
+                "net": 7.33
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 8,
+                "yanlış": 12,
+                "net": 4.0
+            }
+        },
+        "totals": {
+            "doğru": 48.0,
+            "yanlış": 40.0,
+            "net": 34.66
+        }
+    },
+    "93990": {
+        "name": "AHMET KERİM KIRIT",
+        "ranking": 25,
+        "lgs_score": 306.868,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 11,
+                "yanlış": 9,
+                "net": 8.0
+            },
+            "SOSYAL": {
+                "doğru": 8,
+                "yanlış": 2,
+                "net": 7.33
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 4,
+                "yanlış": 6,
+                "net": 2.0
+            },
+            "İNGİLİZCE": {
+                "doğru": 5,
+                "yanlış": 5,
+                "net": 3.33
+            },
+            "MATEMATİK": {
+                "doğru": 7,
+                "yanlış": 3,
+                "net": 6.0
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 10,
+                "yanlış": 10,
+                "net": 6.67
+            }
+        },
+        "totals": {
+            "doğru": 45.0,
+            "yanlış": 35.0,
+            "net": 33.33
+        }
+    },
+    "98634": {
+        "name": "ZEYNEP KOÇ",
+        "ranking": 26,
+        "lgs_score": 305.105,
+        "subjects": {
+            "TÜRKÇE": {
+                "doğru": 14,
+                "yanlış": 6,
+                "net": 12.0
+            },
+            "SOSYAL": {
+                "doğru": 9,
+                "yanlış": 1,
+                "net": 8.67
+            },
+            "DİN KÜLTÜRÜ": {
+                "doğru": 8,
+                "yanlış": 2,
+                "net": 7.33
+            },
+            "İNGİLİZCE": {
+                "doğru": 7,
+                "yanlış": 3,
+                "net": 6.0
+            },
+            "MATEMATİK": {
+                "doğru": 7,
+                "yanlış": 11,
+                "net": 3.33
+            },
+            "FEN BİLİMLERİ": {
+                "doğru": 5,
+                "yanlış": 11,
+                "net": 1.33
+            }
+        },
+        "totals": {
+            "doğru": 50.0,
+            "yanlış": 34.0,
+            "net": 38.66
+        }
+    }
+}; // Buraya JSON verisi gelecektir.
+
+        function fetchStudentData() {
+            const tcNumber = document.getElementById("tcInput").value;
+            const data = studentData[tcNumber];
+
+            if (data) {
+                let subjectRows = '';
+                const subjectOrder = ["TÜRKÇE", "SOSYAL", "DİN KÜLTÜRÜ", "İNGİLİZCE", "MATEMATİK", "FEN BİLİMLERİ"];
+                for (let subject of subjectOrder) {
+                    subjectRows += `
+                        <tr>
+                            <td class="category">${subject}</td>
+                            <td>${data.subjects[subject]["doğru"]}</td>
+                            <td>${data.subjects[subject]["yanlış"]}</td>
+                            <td>${data.subjects[subject]["net"]}</td>
+                        </tr>`;
+                }
+
+                document.getElementById("studentData").innerHTML = `
+                    <table class="result-table">
+                        <tr>
+                            <th colspan="4">${data.name} - Sıralama: ${data.ranking}</th>
+                        </tr>
+                        <tr>
+                            <td colspan="4">LGS Puanı: ${data.lgs_score}</td>
+                        </tr>
+                        <tr>
+                            <th>Ders</th>
+                            <th>Doğru</th>
+                            <th>Yanlış</th>
+                            <th>Net</th>
+                        </tr>
+                        ${subjectRows}
+                        <tr class="total-row">
+                            <td>Toplam</td>
+                            <td>${data.totals["doğru"]}</td>
+                            <td>${data.totals["yanlış"]}</td>
+                            <td>${data.totals["net"]}</td>
+                        </tr>
+                    </table>`;
+            } else {
+                document.getElementById("studentData").innerHTML = "<p>Öğrenci bulunamadı.</p>";
+            }
+        }
+    </script>
+</body>
+</html>
